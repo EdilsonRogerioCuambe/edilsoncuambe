@@ -11,6 +11,8 @@ import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import SideBar from '@/components/sidebar'
 import { CiRead } from 'react-icons/ci'
 import { gql, request } from 'graphql-request'
+import { NextSeo, LogoJsonLd } from 'next-seo'
+import me from '../../../../public/me.jpg'
 
 interface Blog {
   createdAt: string
@@ -260,8 +262,39 @@ export default function Blog() {
     )
   }
 
+  const wesiteLink = 'https://edilsoncuambe.tech/'
+
   return (
     <main>
+      <NextSeo
+        title={blog?.title}
+        description={blog?.shortDescription}
+        canonical={wesiteLink + 'blog/' + blog?.slug}
+        key={blog?.slug}
+        openGraph={{
+          url: wesiteLink + 'blog/' + blog?.slug,
+          title: blog?.title,
+          description: blog?.shortDescription,
+          article: {
+            publishedTime: blog?.publishedAt,
+            modifiedTime: blog?.updatedAt,
+            authors: [blog?.author?.name],
+            tags: blog?.tags,
+          },
+          siteName: 'Edilson Cuambe',
+          type: 'article',
+          images: [
+            {
+              url: blog?.image?.url,
+              width: 800,
+              height: 600,
+              alt: blog?.title,
+            },
+          ],
+          site_name: 'Edilson Cuambe',
+        }}
+      />
+      <LogoJsonLd logo={me.src} url={wesiteLink + 'blog/' + blog?.slug} />
       <Banner title={blog?.title} />
       <div className="max-w-7xl mx-auto my-5">
         {blog?.image && (
@@ -299,7 +332,7 @@ export default function Blog() {
               </div>
             </div>
           </div>
-          <article className="mt-6 prose w-full prose-xl dark:prose-invert text-slate-200 dark:text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
+          <article className="mt-6 prose prose-sm sm:prose sm:prose-sm md:prose-md lg:prose-lg xl:prose-xl 2xl:prose-2xl w-full dark:prose-invert text-slate-200 dark:text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}

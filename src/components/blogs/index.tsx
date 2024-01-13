@@ -120,8 +120,6 @@ export default function BlogsList() {
     setLoading(false)
   }, [DATABASE_URL])
 
-  console.log(blogs)
-
   const fetchCategories = useCallback(async () => {
     const categories = (await request(
       DATABASE_URL,

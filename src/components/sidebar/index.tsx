@@ -35,8 +35,13 @@ export default function SideBar({
   loading: boolean
 }) {
   if (loading) {
-    return <div>Carregando...</div>
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
   }
+
   return (
     <div className="w-full">
       <h3 className="text-xl font-semibold">Últimos Posts</h3>
