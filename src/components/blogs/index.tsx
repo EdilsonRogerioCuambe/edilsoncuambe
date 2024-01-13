@@ -1,15 +1,11 @@
 'use client'
 import { useEffect, useCallback, useState } from 'react'
-import {
-  getAllPosts,
-  getAllPostsByCategory,
-  getAllCategories,
-} from '@/services/database'
 import Cards from '../cards'
 import Pagination from '../pagination'
 import notFoundPosts from '../../../public/no-results-found.png'
 import Image from 'next/image'
 import SideBar from '../sidebar'
+import { gql, request } from 'graphql-request'
 
 interface Blog {
   createdAt: string
@@ -38,33 +34,101 @@ interface Blog {
   }
 }
 
+interface BlogsResponse {
+  blogs: Blog[]
+}
+
 interface Category {
   id: string
   name: string
+  publishedAt: string
   slug: string
+  updatedAt: string
 }
 
+interface CategoriesResponse {
+  categories: Category[]
+}
+
+const queryAllBlogs = gql`
+    query Blogs {
+      blogs() {
+        createdAt
+        description
+        id
+        publishedAt
+        shortDescription
+        slug
+        title
+        updatedAt
+        tags
+        image {
+          url
+        }
+        author {
+          ... on Author {
+            id
+            email
+            name
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          id
+          name
+        }
+      }
+    }
+  `
+
+const queryAllCategories = gql`
+  query Categories {
+    categories {
+      id
+      name
+      publishedAt
+      slug
+      updatedAt
+    }
+  }
+`
+
 export default function BlogsList() {
-  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [blogs, setBlogs] = useState<Blog[]>()
   const [loading, setLoading] = useState(true)
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<Category[]>()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [selectedCategory, setSelectedCategory] = useState('' as string)
   const [totalPages, setTotalPages] = useState<number>(0)
   const pageSize = 12
 
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
+
   const fetchBlogs = useCallback(async () => {
     setLoading(true)
-    const blogs = await getAllPosts()
-    setBlogs(blogs.blogs as Blog[])
+    const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
+    setBlogs(blogs.blogs)
     setTotalPages(Math.ceil(blogs.blogs.length / pageSize))
     setLoading(false)
-  }, [])
+  }, [DATABASE_URL])
+
+  console.log(blogs)
 
   const fetchCategories = useCallback(async () => {
-    const categories = await getAllCategories()
-    setCategories(categories.categories as Category[])
-  }, [])
+    const categories = (await request(
+      DATABASE_URL,
+      queryAllCategories,
+    )) as CategoriesResponse
+    setCategories(categories.categories)
+  }, [DATABASE_URL])
 
   useEffect(() => {
     fetchCategories()
@@ -72,11 +136,48 @@ export default function BlogsList() {
 
   const fetchBlogsByCategory = useCallback(async () => {
     setLoading(true)
-    const blogs = await getAllPostsByCategory(selectedCategory)
-    setBlogs(blogs.blogs as Blog[])
+    const query = gql`
+    query BlogsByCategory {
+      blogs(where: { category: { name: "${selectedCategory}" } }) {
+        author {
+          ... on Author {
+            id
+            email
+            name
+            publishedAt
+            phone
+            updatedAt
+            github
+            createdAt
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          name
+          id
+        }
+        description
+        id
+        publishedAt
+        image {
+          url
+        }
+        title
+        updatedAt
+        tags
+        slug
+        shortDescription
+      }
+    }
+  `
+
+    const blogs = (await request(DATABASE_URL, query)) as BlogsResponse
+    setBlogs(blogs.blogs)
     setTotalPages(Math.ceil(blogs.blogs.length / pageSize))
     setLoading(false)
-  }, [selectedCategory])
+  }, [DATABASE_URL, selectedCategory])
 
   useEffect(() => {
     selectedCategory ? fetchBlogsByCategory() : fetchBlogs()
@@ -84,6 +185,22 @@ export default function BlogsList() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+  }
+
+  if (!blogs) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
   }
 
   return (
@@ -102,7 +219,7 @@ export default function BlogsList() {
         >
           Todos
         </button>
-        {categories.map((category) => (
+        {categories?.map((category: Category) => (
           <button
             title="categoria"
             type="button"
@@ -124,7 +241,7 @@ export default function BlogsList() {
           <div className="flex justify-center items-center">
             <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
           </div>
-        ) : blogs.length > 0 ? (
+        ) : blogs?.length > 0 ? (
           <Cards blogs={blogs} loading={loading} />
         ) : (
           <div className="flex flex-col justify-center items-center my-10">

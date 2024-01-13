@@ -5,10 +5,9 @@ import { FaGithub, FaBlog } from 'react-icons/fa'
 import { BsLinkedin } from 'react-icons/bs'
 import { FiHome } from 'react-icons/fi'
 import { IoIosContact } from 'react-icons/io'
-import { RiServiceLine } from 'react-icons/ri'
 import { CgMail } from 'react-icons/cg'
 
-import { getAllCategories } from '@/services/database'
+import { gql, request } from 'graphql-request'
 
 interface Category {
   id: string
@@ -16,16 +15,52 @@ interface Category {
   slug: string
 }
 
+interface CategoriesResponse {
+  categories: Category[]
+}
+
+const queryAllCategories = gql`
+  query Categories {
+    categories {
+      id
+      name
+      publishedAt
+      slug
+      updatedAt
+    }
+  }
+`
+
 export default function Footer() {
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<Category[]>()
+
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
+
   const fetchCategories = useCallback(async () => {
-    const categories = await getAllCategories()
-    setCategories(categories.categories as Category[])
-  }, [])
+    const categories = (await request(
+      DATABASE_URL,
+      queryAllCategories,
+    )) as CategoriesResponse
+    setCategories(categories.categories)
+  }, [DATABASE_URL])
 
   useEffect(() => {
     fetchCategories()
   }, [fetchCategories])
+
+  if (!categories) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
+  }
 
   return (
     <footer className="bg-[#121214] mt-10">
@@ -37,7 +72,7 @@ export default function Footer() {
                 Categorias
               </p>
               <ul className="mt-2 space-y-2">
-                {categories.map((category) => (
+                {categories?.map((category: Category) => (
                   <li key={category.id}>
                     <Link
                       href={`/category/${category.slug}`}

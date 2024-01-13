@@ -1,6 +1,5 @@
 'use client'
 import { useParams } from 'next/navigation'
-import { getAllPosts, getPostBySlug } from '@/services/database'
 import { useState, useEffect, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Banner from '@/components/banner'
@@ -11,6 +10,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import SideBar from '@/components/sidebar'
 import { CiRead } from 'react-icons/ci'
+import { gql, request } from 'graphql-request'
 
 interface Blog {
   createdAt: string
@@ -39,21 +39,109 @@ interface Blog {
   }
 }
 
+interface BlogResponse {
+  blog: Blog
+}
+
+interface BlogsResponse {
+  blogs: Blog[]
+}
+
+const queryAllBlogs = gql`
+    query Blogs {
+      blogs() {
+        createdAt
+        description
+        id
+        publishedAt
+        shortDescription
+        slug
+        title
+        updatedAt
+        tags
+        image {
+          url
+        }
+        author {
+          ... on Author {
+            id
+            email
+            name
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          id
+          name
+        }
+      }
+    }
+  `
+
 export default function Blog() {
   const { slug } = useParams()
-  const [blog, setBlog] = useState<Blog>({} as Blog)
-  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [blog, setBlog] = useState<Blog>()
+  const [blogs, setBlogs] = useState<Blog[]>()
   const [loading, setLoading] = useState(true)
   const [readingTimeText, setReadingTimeText] = useState('')
 
   const slugString = Array.isArray(slug) ? slug[0] : slug
 
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
+
   const fetchBlog = useCallback(async () => {
     setLoading(true)
-    const blog = await getPostBySlug(slugString)
-    setBlog(blog.blog as Blog)
+    const queryBlogBySlug =
+      gql`
+    query BlogBySlug {
+      blog(where: { slug: "` +
+      slugString +
+      `" }) {
+        author {
+          ... on Author {
+            id
+            email
+            name
+            publishedAt
+            phone
+            updatedAt
+            github
+            createdAt
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          name
+          id
+        }
+        description
+        id
+        publishedAt
+        image {
+          url
+        }
+        title
+        updatedAt
+        tags
+        slug
+        shortDescription
+      }
+    }
+  `
+    const blog = (await request(DATABASE_URL, queryBlogBySlug)) as BlogResponse
+    setBlog(blog.blog)
     setLoading(false)
-  }, [slugString])
+  }, [DATABASE_URL, slugString])
 
   useEffect(() => {
     fetchBlog()
@@ -61,10 +149,10 @@ export default function Blog() {
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true)
-    const blogs = await getAllPosts()
-    setBlogs(blogs.blogs as Blog[])
+    const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
+    setBlogs(blogs.blogs)
     setLoading(false)
-  }, [])
+  }, [DATABASE_URL])
 
   useEffect(() => {
     fetchBlogs()
@@ -78,11 +166,11 @@ export default function Blog() {
   }
 
   useEffect(() => {
-    if (blog.description) {
-      const readingTimeText = `${readingTime(blog.description)} min de leitura`
+    if (blog?.description) {
+      const readingTimeText = `${readingTime(blog?.description)} min de leitura`
       setReadingTimeText(readingTimeText)
     }
-  }, [blog.description])
+  }, [blog?.description])
 
   if (loading) {
     return (
@@ -144,14 +232,42 @@ export default function Blog() {
     )
   }
 
+  if (!blog) {
+    return (
+      <main>
+        <Banner title="Blog" />
+        <div className="max-w-7xl mx-auto my-5">
+          <div className="flex justify-center items-center">
+            <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto my-12 px-4 flex flex-col md:flex-row">
+          <div className="lg:w-3/4">
+            <div className="flex justify-center items-center">
+              <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+            </div>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  if (!blogs) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <main>
-      <Banner title={blog.title} />
+      <Banner title={blog?.title} />
       <div className="max-w-7xl mx-auto my-5">
-        {blog.image && (
+        {blog?.image && (
           <Image
-            src={blog.image?.url}
-            alt={blog.title}
+            src={blog?.image?.url}
+            alt={blog?.title}
             width={1600}
             height={700}
             className="rounded-lg w-full mx-auto"
@@ -163,8 +279,8 @@ export default function Blog() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Image
-                src={blog.author?.avatar?.url}
-                alt={blog.author?.name}
+                src={blog?.author?.avatar?.url}
+                alt={blog?.author?.name}
                 width={48}
                 height={48}
                 className="rounded-full w-16 h-16 object-cover"
@@ -172,10 +288,10 @@ export default function Blog() {
             </div>
             <div className="ml-4">
               <div className="text-sm font-medium text-[#c4c4cc]">
-                {blog.author?.name}
+                {blog?.author?.name}
               </div>
               <div className="text-sm text-[#c4c4cc]">
-                {new Date(blog.publishedAt).toLocaleDateString()}
+                {new Date(blog?.publishedAt).toLocaleDateString()}
               </div>
               <div className="text-sm text-[#c4c4cc]">
                 <CiRead className="inline-block mr-1" />
@@ -208,7 +324,7 @@ export default function Blog() {
                 },
               }}
             >
-              {blog.description}
+              {blog?.description}
             </ReactMarkdown>
           </article>
         </div>

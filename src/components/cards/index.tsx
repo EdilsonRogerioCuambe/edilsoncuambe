@@ -62,7 +62,7 @@ export default function Cards({
 
   return (
     <div className="grid md:grid-cols-3 mb-5 sm:grid-cols-2 grid-cols-1 gap-8">
-      {blogs.map((blog) => (
+      {blogs?.map((blog) => (
         <Link
           key={blog.id}
           href={`/blog/${blog.slug}`}

@@ -1,12 +1,12 @@
 'use client'
 import Banner from '@/components/banner'
 import ReactMarkdown from 'react-markdown'
-import { getAllPosts, getAuthorByEmail } from '@/services/database'
 import SideBar from '@/components/sidebar'
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import github from '../../../public/github.png'
 import linkedin from '../../../public/linkedin.png'
+import request, { gql } from 'graphql-request'
 
 interface Author {
   avatar: {
@@ -22,6 +22,10 @@ interface Author {
   updatedAt: string
   createdAt: string
   description: string
+}
+
+interface AuthorResponse {
+  author: Author
 }
 
 interface Blog {
@@ -51,29 +55,113 @@ interface Blog {
   }
 }
 
+interface BlogsResponse {
+  blogs: Blog[]
+}
+
+const queryAllBlogs = gql`
+    query Blogs {
+      blogs() {
+        createdAt
+        description
+        id
+        publishedAt
+        shortDescription
+        slug
+        title
+        updatedAt
+        tags
+        image {
+          url
+        }
+        author {
+          ... on Author {
+            id
+            email
+            name
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          id
+          name
+        }
+      }
+    }
+  `
+
+const queryAuthorByEmail = gql`
+  query Author {
+    author(where: { email: "edilson@aluno.unilab.edu.br" }) {
+      avatar {
+        url
+      }
+      email
+      github
+      id
+      linkedIn
+      name
+      phone
+      publishedAt
+      updatedAt
+      createdAt
+      description
+    }
+  }
+`
+
 export default function Sobre() {
   const [author, setAuthor] = useState<Author>()
-  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [blogs, setBlogs] = useState<Blog[]>()
   const [loading, setLoading] = useState(true)
+
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true)
-    const blogs = await getAllPosts()
-    setBlogs(blogs.blogs as Blog[])
+    const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
+    setBlogs(blogs.blogs)
     setLoading(false)
-  }, [])
+  }, [DATABASE_URL])
 
   const fetchAuthor = useCallback(async () => {
     setLoading(true)
-    const author = await getAuthorByEmail('edilson@aluno.unilab.edu.br')
-    setAuthor(author.author as Author)
+    const author = (await request(
+      DATABASE_URL,
+      queryAuthorByEmail,
+    )) as AuthorResponse
+    setAuthor(author.author)
     setLoading(false)
-  }, [])
+  }, [DATABASE_URL])
 
   useEffect(() => {
     fetchBlogs()
     fetchAuthor()
   }, [fetchBlogs, fetchAuthor])
+
+  if (!author) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
+  }
+
+  if (!blogs) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
+      </div>
+    )
+  }
 
   return (
     <main>
