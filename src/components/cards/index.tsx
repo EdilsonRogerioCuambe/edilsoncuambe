@@ -67,14 +67,14 @@ export default function Cards({
     <div className="grid md:grid-cols-3 mb-5 sm:grid-cols-2 grid-cols-1 gap-8">
       {blogs?.map((blog) => (
         <Link
-          key={blog.id}
-          href={`/blog/${blog.slug}`}
+          key={blog?.id}
+          href={`/blog/${blog?.slug}`}
           passHref
           className="p-5 shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300 ease-in-out h-[550px]"
         >
           <Image
-            src={blog.image.url}
-            alt={blog.author.name}
+            src={blog?.image?.url}
+            alt={blog?.author?.name}
             className="rounded-lg w-full h-64 object-cover"
             width={500}
             height={500}
@@ -84,16 +84,16 @@ export default function Cards({
           </h3>
           <p className="mb-2 text-gray-400">
             <Image
-              src={blog.author.avatar.url}
-              alt={blog.author.name}
+              src={blog?.author?.avatar?.url}
+              alt={blog?.author?.name}
               className="rounded-full w-10 h-10 object-cover inline-flex mr-2 border-2 border-purple-400"
               width={24}
               height={24}
             />
-            {blog.author.name}
+            {blog?.author?.name}
           </p>
           <p className="text-sm text-gray-400">
-            Publicado em: {new Date(blog.publishedAt).toLocaleDateString()}
+            Publicado em: {new Date(blog?.publishedAt).toLocaleDateString()}
           </p>
         </Link>
       ))}
