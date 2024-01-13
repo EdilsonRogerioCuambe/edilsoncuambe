@@ -51,37 +51,37 @@ interface CategoriesResponse {
 }
 
 const queryAllBlogs = gql`
-    query Blogs {
-      blogs() {
-        createdAt
-        description
-        id
-        publishedAt
-        shortDescription
-        slug
-        title
-        updatedAt
-        tags
-        image {
-          url
-        }
-        author {
-          ... on Author {
-            id
-            email
-            name
-            avatar {
-              url
-            }
+  query Blogs {
+    blogs(orderBy: createdAt_DESC) {
+      createdAt
+      description
+      id
+      publishedAt
+      shortDescription
+      slug
+      title
+      updatedAt
+      tags
+      image {
+        url
+      }
+      author {
+        ... on Author {
+          id
+          email
+          name
+          avatar {
+            url
           }
         }
-        category {
-          id
-          name
-        }
+      }
+      category {
+        id
+        name
       }
     }
-  `
+  }
+`
 
 const queryAllCategories = gql`
   query Categories {
@@ -136,7 +136,7 @@ export default function BlogsList() {
     setLoading(true)
     const query = gql`
     query BlogsByCategory {
-      blogs(where: { category: { name: "${selectedCategory}" } }) {
+      blogs(where: { category: { name: "${selectedCategory}" } }, orderBy: createdAt_DESC) {
         author {
           ... on Author {
             id

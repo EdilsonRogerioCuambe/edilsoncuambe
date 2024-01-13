@@ -48,37 +48,37 @@ interface BlogsResponse {
 }
 
 const queryAllBlogs = gql`
-    query Blogs {
-      blogs() {
-        createdAt
-        description
-        id
-        publishedAt
-        shortDescription
-        slug
-        title
-        updatedAt
-        tags
-        image {
-          url
-        }
-        author {
-          ... on Author {
-            id
-            email
-            name
-            avatar {
-              url
-            }
+  query Blogs {
+    blogs(orderBy: createdAt_DESC) {
+      createdAt
+      description
+      id
+      publishedAt
+      shortDescription
+      slug
+      title
+      updatedAt
+      tags
+      image {
+        url
+      }
+      author {
+        ... on Author {
+          id
+          email
+          name
+          avatar {
+            url
           }
         }
-        category {
-          id
-          name
-        }
+      }
+      category {
+        id
+        name
       }
     }
-  `
+  }
+`
 
 export default function Blog() {
   const { slug } = useParams()
@@ -175,7 +175,7 @@ export default function Blog() {
   if (!blog || loading || !blogs) {
     return (
       <main>
-        <Banner title="Loading..." />
+        <Banner title="Carregando..." />
       </main>
     )
   }
