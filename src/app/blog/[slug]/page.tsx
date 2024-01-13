@@ -11,6 +11,8 @@ import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import SideBar from '@/components/sidebar'
 import { CiRead } from 'react-icons/ci'
 import { gql, request } from 'graphql-request'
+import { NextSeo } from 'next-seo'
+import { siteMetadata } from '@/utils/siteMetadata'
 
 interface Blog {
   createdAt: string
@@ -181,7 +183,47 @@ export default function Blog() {
   }
 
   return (
-    <main>
+    <>
+      <NextSeo
+        title={blog?.title}
+        titleTemplate="%s | Blog"
+        description={blog?.shortDescription}
+        canonical={`https://edilsoncuambe.tech/blog/${blog?.slug}`}
+        openGraph={{
+          article: {
+            publishedTime: blog?.publishedAt,
+            modifiedTime: blog?.updatedAt,
+            authors: [blog?.author?.name],
+            tags: blog?.tags,
+          },
+          defaultImageHeight: 500,
+          defaultImageWidth: 500,
+          images: [
+            {
+              url: blog?.image?.url,
+              width: 800,
+              height: 600,
+              alt: blog?.title,
+            },
+          ],
+          locale: 'pt_BR',
+          site_name: siteMetadata.title,
+          description: blog?.shortDescription,
+          title: blog?.title,
+          url: `https://edilsoncuambe.tech/blog/${blog?.slug}`,
+          type: 'article',
+          siteName: siteMetadata.title,
+        }}
+        robotsProps={{
+          nosnippet: true,
+          notranslate: true,
+          noimageindex: true,
+          noarchive: true,
+          maxSnippet: -1,
+          maxImagePreview: 'none',
+          maxVideoPreview: -1,
+        }}
+      />
       <Banner title={blog?.title} />
       <div className="max-w-7xl mx-auto my-5">
         {blog?.image && (
@@ -252,6 +294,6 @@ export default function Blog() {
           <SideBar blogs={blogs} loading={loading} />
         </div>
       </div>
-    </main>
+    </>
   )
 }

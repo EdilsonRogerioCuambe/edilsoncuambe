@@ -3,7 +3,7 @@ import BlogsList from '@/components/blogs'
 
 export default function Home() {
   return (
-    <main className="">
+    <main>
       <Banner title="Seja Bem Vindo Ao Meu Blog" />
       <div className="mx-auto max-w-7xl">
         <BlogsList />

@@ -6,6 +6,7 @@ import Footer from '@/components/footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { siteMetadata } from '@/utils/siteMetadata'
+import Head from 'next/head'
 const mono = Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -46,6 +47,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt">
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="TPHgOpVGbPqyxuS6G-HjC--agGlrtzt-Edgor30bO3M"
+        />
+        <meta name="msvalidate.01" content="D394D5F78D4CC456BC6BE2175B9BC1C9" />
+      </Head>
       <body className={`${mono.className} bg-[#202024] text-[#c4c4cc]`}>
         <Navbar />
         {children}
