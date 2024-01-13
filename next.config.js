@@ -8,10 +8,6 @@ const nextConfig = {
       },
     ],
   },
-  env: {
-    GRAPHQL_URL:
-      'https://api-sa-east-1.hygraph.com/v2/clrad90h4138601wa2w9ischq/master',
-  },
 }
 
 module.exports = nextConfig

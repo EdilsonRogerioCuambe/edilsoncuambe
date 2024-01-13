@@ -1,6 +1,6 @@
 import { gql, request } from 'graphql-request'
 
-const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || ''
 
 if (!DATABASE_URL) {
   throw new Error(
