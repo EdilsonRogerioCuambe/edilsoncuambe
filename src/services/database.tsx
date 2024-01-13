@@ -32,7 +32,15 @@ interface Blog {
   }
 }
 
-export const getAllPosts = async (): Promise<Blog[]> => {
+interface BlogResponse {
+  blog: Blog
+}
+
+interface BlogsResponse {
+  blogs: Blog[]
+}
+
+export const getAllPosts = async (): Promise<BlogsResponse> => {
   const query = gql`
     query Blogs {
       blogs() {
@@ -66,12 +74,12 @@ export const getAllPosts = async (): Promise<Blog[]> => {
     }
   `
   const blogs: Blog[] = await request(DATABASE_URL, query)
-  return blogs
+  return { blogs }
 }
 
 export const getAllPostsByCategory = async (
   category: string,
-): Promise<Blog[]> => {
+): Promise<BlogsResponse> => {
   const query =
     gql`
     query BlogsByCategory {
@@ -113,10 +121,10 @@ export const getAllPostsByCategory = async (
   `
 
   const blogs: Blog[] = await request(DATABASE_URL, query)
-  return blogs
+  return { blogs }
 }
 
-export const getPostBySlug = async (slug: string): Promise<Blog> => {
+export const getPostBySlug = async (slug: string): Promise<BlogResponse> => {
   const query =
     gql`
     query BlogBySlug {
@@ -158,7 +166,7 @@ export const getPostBySlug = async (slug: string): Promise<Blog> => {
   `
 
   const blog: Blog = await request(DATABASE_URL, query)
-  return blog
+  return { blog }
 }
 
 interface Category {
@@ -169,7 +177,11 @@ interface Category {
   updatedAt: string
 }
 
-export const getAllCategories = async (): Promise<Category[]> => {
+interface CategoriesResponse {
+  categories: Category[]
+}
+
+export const getAllCategories = async (): Promise<CategoriesResponse> => {
   const query = gql`
     query Categories {
       categories {
@@ -182,7 +194,7 @@ export const getAllCategories = async (): Promise<Category[]> => {
     }
   `
   const categories: Category[] = await request(DATABASE_URL, query)
-  return categories
+  return { categories }
 }
 
 interface Author {
@@ -201,7 +213,13 @@ interface Author {
   description: string
 }
 
-export const getAuthorByEmail = async (email: string): Promise<Author> => {
+interface AuthorResponse {
+  author: Author
+}
+
+export const getAuthorByEmail = async (
+  email: string,
+): Promise<AuthorResponse> => {
   const query =
     gql`
     query Author {
@@ -225,5 +243,5 @@ export const getAuthorByEmail = async (email: string): Promise<Author> => {
     }
   `
   const author: Author = await request(DATABASE_URL, query)
-  return author
+  return { author }
 }
