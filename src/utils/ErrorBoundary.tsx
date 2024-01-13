@@ -1,3 +1,4 @@
+'use client'
 import React, { ErrorInfo, ReactNode } from 'react'
 
 type ErrorBoundaryProps = {
