@@ -9,8 +9,9 @@ import 'react-toastify/dist/ReactToastify.css'
 const mono = Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Edilson Cuambe',
-  description: 'Blog Sobre Tecnologia',
+  title: 'Blog | Edilson Rogério Cuambe',
+  description: 'Blog Sobre Tecnologia e Programação.',
+  creator: 'Edilson Rogério Cuambe',
 }
 
 export default function RootLayout({
