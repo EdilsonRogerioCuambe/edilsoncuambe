@@ -56,7 +56,7 @@ export default function BlogsList() {
   const fetchBlogs = useCallback(async () => {
     setLoading(true)
     const blogs = await getAllPosts()
-    setBlogs(blogs as Blog[])
+    setBlogs(blogs.blogs as Blog[])
     setTotalPages(Math.ceil(blogs.blogs.length / pageSize))
     setLoading(false)
   }, [])
@@ -73,7 +73,7 @@ export default function BlogsList() {
   const fetchBlogsByCategory = useCallback(async () => {
     setLoading(true)
     const blogs = await getAllPostsByCategory(selectedCategory)
-    setBlogs(blogs as Blog[])
+    setBlogs(blogs.blogs as Blog[])
     setTotalPages(Math.ceil(blogs.blogs.length / pageSize))
     setLoading(false)
   }, [selectedCategory])
@@ -124,8 +124,8 @@ export default function BlogsList() {
           <div className="flex justify-center items-center">
             <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
           </div>
-        ) : blogs.blogs.length > 0 ? (
-          <Cards blogs={blogs.blogs} loading={loading} />
+        ) : blogs.length > 0 ? (
+          <Cards blogs={blogs} loading={loading} />
         ) : (
           <div className="flex flex-col justify-center items-center my-10">
             <Image
@@ -140,11 +140,11 @@ export default function BlogsList() {
           </div>
         )}
         <div className="mx-4">
-          <SideBar blogs={blogs.blogs} loading={loading} />
+          <SideBar blogs={blogs} loading={loading} />
         </div>
       </div>
       <div>
-        {blogs?.blogs?.length > 0 && (
+        {blogs?.length > 0 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
