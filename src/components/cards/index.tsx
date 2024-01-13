@@ -35,6 +35,9 @@ export default function Cards({
   blogs: Blog[]
   loading: boolean
 }) {
+  if (!blogs) {
+    return null
+  }
   const loadingCards = Array.from({ length: 12 }).map((_, index) => (
     <div
       key={index}
