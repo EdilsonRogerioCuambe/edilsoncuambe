@@ -332,7 +332,7 @@ export default function Blog() {
               </div>
             </div>
           </div>
-          <article className="mt-6 prose prose-sm sm:prose sm:prose-sm md:prose-md lg:prose-lg xl:prose-xl 2xl:prose-2xl w-full dark:prose-invert text-slate-200 dark:text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
+          <article className="mt-6 prose prose-sm sm:prose sm:prose-sm md:prose-md lg:prose-lg xl:prose-xl 2xl:prose-2xl w-full prose-invert text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
