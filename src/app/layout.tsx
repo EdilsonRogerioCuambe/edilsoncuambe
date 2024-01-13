@@ -5,8 +5,6 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
-import ErrorComponent from '@/components/err'
 
 const mono = Mono({ subsets: ['latin'] })
 
@@ -24,12 +22,10 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className={`${mono.className} bg-[#202024] text-[#c4c4cc]`}>
-        <ErrorBoundary errorComponent={ErrorComponent}>
-          <Navbar />
-          {children}
-          <Footer />
-          <ToastContainer />
-        </ErrorBoundary>
+        <Navbar />
+        {children}
+        <Footer />
+        <ToastContainer />
       </body>
     </html>
   )
