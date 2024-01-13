@@ -88,7 +88,7 @@ export default async function sitemap() {
     })),
   ]
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="xml"?>
     <urlset
       xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
