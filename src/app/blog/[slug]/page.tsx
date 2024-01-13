@@ -11,8 +11,6 @@ import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import SideBar from '@/components/sidebar'
 import { CiRead } from 'react-icons/ci'
 import { gql, request } from 'graphql-request'
-import { NextSeo, LogoJsonLd } from 'next-seo'
-import me from '../../../../public/me.jpg'
 
 interface Blog {
   createdAt: string
@@ -174,127 +172,16 @@ export default function Blog() {
     }
   }, [blog?.description])
 
-  if (loading) {
+  if (!blog || loading || !blogs) {
     return (
       <main>
-        <Banner title="Blog" />
-        <div className="max-w-7xl mx-auto my-5">
-          <div className="animate-pulse flex space-x-4">
-            <div className="h-80 bg-[#c4c4cc] rounded w-3/4"></div>
-            <div className="flex-1 space-y-4 px-4 py-1">
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto my-12 px-4 flex flex-col md:flex-row">
-          <div className="lg:w-3/4">
-            <div className="animate-pulse flex space-x-4">
-              <div className="flex-1 space-y-4 py-1">
-                <div className="h-4 bg-[#c4c4cc] rounded w-3/4"></div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                  <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                  <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-[#c4c4cc] rounded w-4/6"></div>
-                  <div className="h-4 bg-[#c4c4cc] rounded w-5/6"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Banner title="Loading..." />
       </main>
     )
   }
-
-  if (!blog) {
-    return (
-      <main>
-        <Banner title="Blog" />
-        <div className="max-w-7xl mx-auto my-5">
-          <div className="flex justify-center items-center">
-            <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto my-12 px-4 flex flex-col md:flex-row">
-          <div className="lg:w-3/4">
-            <div className="flex justify-center items-center">
-              <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
-            </div>
-          </div>
-        </div>
-      </main>
-    )
-  }
-
-  if (!blogs) {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
-      </div>
-    )
-  }
-
-  const wesiteLink = 'https://edilsoncuambe.tech/'
 
   return (
     <main>
-      <NextSeo
-        title={blog?.title}
-        description={blog?.shortDescription}
-        canonical={wesiteLink + 'blog/' + blog?.slug}
-        key={blog?.slug}
-        openGraph={{
-          url: wesiteLink + 'blog/' + blog?.slug,
-          title: blog?.title,
-          description: blog?.shortDescription,
-          article: {
-            publishedTime: blog?.publishedAt,
-            modifiedTime: blog?.updatedAt,
-            authors: [blog?.author?.name],
-            tags: blog?.tags,
-          },
-          siteName: 'Edilson Cuambe',
-          type: 'article',
-          images: [
-            {
-              url: blog?.image?.url,
-              width: 800,
-              height: 600,
-              alt: blog?.title,
-            },
-          ],
-          site_name: 'Edilson Cuambe',
-        }}
-      />
-      <LogoJsonLd logo={me.src} url={wesiteLink + 'blog/' + blog?.slug} />
       <Banner title={blog?.title} />
       <div className="max-w-7xl mx-auto my-5">
         {blog?.image && (
@@ -332,7 +219,7 @@ export default function Blog() {
               </div>
             </div>
           </div>
-          <article className="mt-6 prose prose-sm sm:prose sm:prose-sm md:prose-md lg:prose-lg xl:prose-xl 2xl:prose-2xl w-full prose-invert text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
+          <article className="mt-6 prose w-full prose-xl dark:prose-invert text-slate-200 dark:text-[#c4c4cc] font-mono font-light prose-code:prose-lg prose-pre:bg-transparent prose-pre:p-0">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
