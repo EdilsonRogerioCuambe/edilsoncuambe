@@ -83,7 +83,7 @@ async function fetchAllBlogs() {
 
 export async function generateSitemaps() {
   const blogs = await fetchAllBlogs()
-  return blogs.map((blog) => ({ alug: blog.slug }))
+  return blogs.map((blog) => ({ slug: blog.slug }))
 }
 
 export default async function sitemap({
