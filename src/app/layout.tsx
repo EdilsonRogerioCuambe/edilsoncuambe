@@ -74,7 +74,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <ToastContainer />
-        <GoogleAnalytics GA_TRACKING_ID={GOOGLE_ANALYTICS} />
+        <GoogleAnalytics />
       </body>
     </html>
   )
