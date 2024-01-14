@@ -104,6 +104,5 @@ export default async function sitemap({
 
   return blogs.slice(start, end).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
-    lastmod: blog.createdAt,
   }))
 }
