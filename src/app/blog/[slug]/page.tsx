@@ -39,99 +39,114 @@ interface BlogsResponse {
 export const dynamicParams = false
 
 async function fetchAllBlogs() {
-  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+  try {
+    const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
-  if (!DATABASE_URL) {
-    throw new Error(
-      'Please define the DATABASE_URL environment variable inside .env.local',
-    )
-  }
+    if (!DATABASE_URL) {
+      throw new Error(
+        'Please define the DATABASE_URL environment variable inside .env.local',
+      )
+    }
 
-  const queryAllBlogs = gql`
-    query Blogs {
-      blogs(orderBy: createdAt_DESC) {
-        createdAt
-        description
-        id
-        publishedAt
-        shortDescription
-        slug
-        title
-        updatedAt
-        tags
-        image {
-          url
-        }
-        author {
-          ... on Author {
-            id
-            email
-            name
-            avatar {
-              url
+    const queryAllBlogs = gql`
+      query Blogs {
+        blogs(orderBy: createdAt_DESC) {
+          createdAt
+          description
+          id
+          publishedAt
+          shortDescription
+          slug
+          title
+          updatedAt
+          tags
+          image {
+            url
+          }
+          author {
+            ... on Author {
+              id
+              email
+              name
+              avatar {
+                url
+              }
             }
           }
-        }
-        category {
-          id
-          name
+          category {
+            id
+            name
+          }
         }
       }
-    }
-  `
-  const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
-  return blogs.blogs
+    `
+    const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
+    return blogs.blogs
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function fetchBlog(slug: string) {
-  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+  try {
+    const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
-  if (!DATABASE_URL) {
-    throw new Error(
-      'Please define the DATABASE_URL environment variable inside .env.local',
-    )
-  }
+    if (!DATABASE_URL) {
+      throw new Error(
+        'Please define the DATABASE_URL environment variable inside .env.local',
+      )
+    }
 
-  const queryBlog = gql`
-    query Blog($slug: String!) {
-      blog(where: { slug: $slug }) {
-        createdAt
-        description
-        id
-        publishedAt
-        shortDescription
-        slug
-        title
-        updatedAt
-        tags
-        image {
-          url
-        }
-        author {
-          ... on Author {
-            id
-            email
-            name
-            avatar {
-              url
+    const queryBlog = gql`
+      query Blog($slug: String!) {
+        blog(where: { slug: $slug }) {
+          createdAt
+          description
+          id
+          publishedAt
+          shortDescription
+          slug
+          title
+          updatedAt
+          tags
+          image {
+            url
+          }
+          author {
+            ... on Author {
+              id
+              email
+              name
+              avatar {
+                url
+              }
             }
           }
-        }
-        category {
-          id
-          name
+          category {
+            id
+            name
+          }
         }
       }
-    }
-  `
-  const blog = (await request(DATABASE_URL, queryBlog, {
-    slug,
-  })) as BlogResponse
-  return blog.blog
+    `
+    const blog = (await request(DATABASE_URL, queryBlog, {
+      slug,
+    })) as BlogResponse
+    return blog.blog
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export async function generateStaticParams() {
   const blogs = await fetchAllBlogs()
+
+  if (!blogs) {
+    return {
+      notFound: true,
+    }
+  }
+
   return blogs.map((blog) => {
     return {
       params: {
@@ -144,6 +159,12 @@ export async function generateStaticParams() {
 const Blog = async (params: { params: { slug: string } }) => {
   const blogs = await fetchAllBlogs()
   const blog = await fetchBlog(params.params.slug)
+
+  if (!blog || !blogs) {
+    return {
+      notFound: true,
+    }
+  }
 
   return <>{blog && <BlogPage blog={blog} blogs={blogs} />}</>
 }
