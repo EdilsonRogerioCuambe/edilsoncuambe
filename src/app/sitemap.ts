@@ -83,19 +83,14 @@ async function fetchAllBlogs() {
 
 export async function generateSitemaps() {
   const blogs = await fetchAllBlogs()
-  // return something like this return [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }]
-  return blogs.map((blog) => ({ slug: blog.slug }))
+  return blogs.map((blog) => ({ alug: blog.slug }))
 }
 
-export default async function sitemap({
-  slug,
-}: {
-  slug: string
-}): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogs = await fetchAllBlogs()
 
   return blogs.slice(0, 50000).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
-    lastmod: new Date(blog.updatedAt).toISOString(),
+    lastmod: blog.updatedAt,
   }))
 }
