@@ -138,23 +138,6 @@ async function fetchBlog(slug: string) {
   }
 }
 
-export async function generateStaticParams() {
-  try {
-    const blogs = await fetchAllBlogs()
-
-    if (!blogs || blogs.length === 0) {
-      return []
-    }
-
-    return blogs.map((blog) => ({
-      params: { slug: blog.slug },
-    }))
-  } catch (error) {
-    console.error('Erro ao gerar parâmetros estáticos:', error)
-    return []
-  }
-}
-
 export default async function Blog(params: { params: { slug: string } }) {
   const blogs = await fetchAllBlogs()
   const blog = await fetchBlog(params.params.slug)
