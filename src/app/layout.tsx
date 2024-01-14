@@ -5,6 +5,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import GoogleAnalytics from './GoogleAnalytics'
 
 const mono = Mono({ subsets: ['latin'] })
 
@@ -62,6 +63,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt">
+      <GoogleAnalytics GA_TRACKING_ID={process.env.GA_TRACKING_ID as string} />
       <body className={`${mono.className} bg-[#202024] text-[#c4c4cc]`}>
         <Navbar />
         {children}
