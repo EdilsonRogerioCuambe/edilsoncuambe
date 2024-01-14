@@ -47,6 +47,12 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: 'TPHgOpVGbPqyxuS6G-HjC--agGlrtzt-Edgor30bO3M',
+    other: {
+      'msvalidate.01': 'D394D5F78D4CC456BC6BE2175B9BC1C9',
+    },
+  },
 }
 
 export default function RootLayout({
