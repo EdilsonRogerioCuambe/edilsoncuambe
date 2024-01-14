@@ -61,9 +61,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const GOOGLE_ANALYTICS = process.env.GA_TRACKING_ID
+
+  if (!GOOGLE_ANALYTICS) {
+    throw new Error('Missing env.GA_TRACKING_ID')
+  }
+
   return (
     <html lang="pt">
-      <GoogleAnalytics GA_TRACKING_ID={process.env.GA_TRACKING_ID as string} />
+      <GoogleAnalytics GA_TRACKING_ID={GOOGLE_ANALYTICS} />
       <body className={`${mono.className} bg-[#202024] text-[#c4c4cc]`}>
         <Navbar />
         {children}
