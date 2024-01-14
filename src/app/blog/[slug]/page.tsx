@@ -145,13 +145,7 @@ const Blog = async (params: { params: { slug: string } }) => {
   const blogs = await fetchAllBlogs()
   const blog = await fetchBlog(params.params.slug)
 
-  if (!blog) {
-    return {
-      notFound: true,
-    }
-  }
-
-  return <BlogPage blog={blog} blogs={blogs} />
+  return <>{blog && <BlogPage blog={blog} blogs={blogs} />}</>
 }
 
 export default Blog
