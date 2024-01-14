@@ -142,9 +142,7 @@ export async function generateStaticParams() {
   const blogs = await fetchAllBlogs()
 
   if (!blogs) {
-    return {
-      notFound: true,
-    }
+    return null
   }
 
   return blogs.map((blog) => {
@@ -161,9 +159,7 @@ export default async function Blog(params: { params: { slug: string } }) {
   const blog = await fetchBlog(params.params.slug)
 
   if (!blog || !blogs) {
-    return {
-      notFound: true,
-    }
+    return null
   }
 
   return <>{blog && <BlogPage blog={blog} blogs={blogs} />}</>
