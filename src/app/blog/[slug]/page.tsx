@@ -83,6 +83,53 @@ async function fetchAllBlogs() {
   return blogs.blogs
 }
 
+async function fetchBlog(slug: string) {
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
+
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
+
+  const queryBlog = gql`
+    query Blog($slug: String!) {
+      blog(where: { slug: $slug }) {
+        createdAt
+        description
+        id
+        publishedAt
+        shortDescription
+        slug
+        title
+        updatedAt
+        tags
+        image {
+          url
+        }
+        author {
+          ... on Author {
+            id
+            email
+            name
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          id
+          name
+        }
+      }
+    }
+  `
+  const blog = (await request(DATABASE_URL, queryBlog, {
+    slug,
+  })) as BlogResponse
+  return blog.blog
+}
+
 export async function generateStaticParams() {
   const blogs = await fetchAllBlogs()
   return blogs.map((blog) => {
@@ -96,7 +143,7 @@ export async function generateStaticParams() {
 
 const Blog = async (params: { params: { slug: string } }) => {
   const blogs = await fetchAllBlogs()
-  const blog = blogs.find((blog) => blog.slug === params.params.slug)
+  const blog = await fetchBlog(params.params.slug)
 
   if (!blog) {
     return {
