@@ -141,6 +141,7 @@ async function fetchBlog(slug: string) {
 
 export async function generateMetadata(
   params: { params: { slug: string } },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const blog = await fetchBlog(params.params.slug)

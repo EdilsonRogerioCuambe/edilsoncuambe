@@ -5,6 +5,7 @@ import Image from 'next/image'
 import github from '../../../public/github.png'
 import linkedin from '../../../public/linkedin.png'
 import request, { gql } from 'graphql-request'
+import type { Metadata } from 'next'
 
 interface Author {
   avatar: {
@@ -140,6 +141,44 @@ async function fetchAuthor() {
   )) as AuthorResponse
 
   return author.author
+}
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://edilsoncuambe.tech'),
+  title: 'Sobre Mim | Tecnologia em Foco com Edilson Cuambe',
+  description:
+    'Descubra as maravilhas do mundo da tecnologia com Edilson Rogério Cuambe, um entusiasta da engenharia de computação e desenvolvedor full stack. Acompanhe sua jornada enquanto ele desvenda as mais recentes inovações e tendências tecnológicas.',
+  creator: 'Edilson Rogério Cuambe',
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://edilsoncuambe.tech',
+    images: [
+      {
+        url: '../../public/me.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Edilson Rogério Cuambe',
+      },
+    ],
+    siteName: 'Edilson Rogério Cuambe',
+    title: 'Tecnologia em Foco com Edilson Cuambe',
+    description:
+      'Descubra as maravilhas do mundo da tecnologia com Edilson Rogério Cuambe, um entusiasta da engenharia de computação e desenvolvedor full stack. Acompanhe sua jornada enquanto ele desvenda as mais recentes inovações e tendências tecnológicas.',
+  },
+  category: 'Tecnologia',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: false,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default async function Sobre() {
