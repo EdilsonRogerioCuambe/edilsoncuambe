@@ -121,6 +121,17 @@ export default function BlogPage({
           </article>
         </div>
         <div className="lg:w-1/4">
+          <h2 className="text-2xl font-bold text-[#c4c4cc] mb-4">Tags</h2>
+          <div className="flex flex-wrap justify-center mb-4">
+            {blog?.tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-[#c4c4cc] text-[#1f1f1f] mr-2 mb-2"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
           <SideBar blogs={blogs} />
         </div>
       </div>
