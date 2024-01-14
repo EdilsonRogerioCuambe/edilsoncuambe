@@ -1,5 +1,6 @@
 import { gql, request } from 'graphql-request'
 import BlogPage from '@/components/blog-page'
+import type { Metadata, ResolvingMetadata } from 'next'
 
 interface Blog {
   createdAt: string
@@ -135,6 +136,51 @@ async function fetchBlog(slug: string) {
     return blog.blog
   } catch (error) {
     console.log(error)
+  }
+}
+
+export async function generateMetadata(
+  params: { params: { slug: string } },
+  _parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const blog = await fetchBlog(params.params.slug)
+
+  if (!blog) {
+    return {}
+  }
+
+  return {
+    metadataBase: new URL('https://edilsoncuambe.tech'),
+    title: {
+      template: '%s | Tecnologia em Foco com Edilson Cuambe',
+      default: blog.title,
+    },
+    description: blog.shortDescription,
+    creator: blog.author.name,
+    publisher: blog.author.name,
+    category: blog.category.name,
+    keywords: blog.tags,
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
+      images: blog.image.url,
+      siteName: 'Edilson Rogério Cuambe',
+      title: blog.title,
+      description: blog.shortDescription,
+    },
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: false,
+        noimageindex: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   }
 }
 
