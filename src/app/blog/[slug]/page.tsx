@@ -156,7 +156,7 @@ export async function generateStaticParams() {
   })
 }
 
-const Blog = async (params: { params: { slug: string } }) => {
+export default async function Blog(params: { params: { slug: string } }) {
   const blogs = await fetchAllBlogs()
   const blog = await fetchBlog(params.params.slug)
 
@@ -168,5 +168,3 @@ const Blog = async (params: { params: { slug: string } }) => {
 
   return <>{blog && <BlogPage blog={blog} blogs={blogs} />}</>
 }
-
-export default Blog
