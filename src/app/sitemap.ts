@@ -83,6 +83,9 @@ async function fetchAllBlogs() {
 
 export async function generateSitemaps() {
   const blogs = await fetchAllBlogs()
+  if (!blogs) {
+    return []
+  }
   return blogs.map((blog) => ({ slug: blog.slug }))
 }
 
@@ -94,6 +97,10 @@ export default async function sitemap({
   const start = id * 50000
   const end = start + 50000
   const blogs = await fetchAllBlogs()
+
+  if (!blogs) {
+    return []
+  }
 
   return blogs.slice(start, end).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
