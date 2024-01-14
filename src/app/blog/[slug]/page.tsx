@@ -139,19 +139,19 @@ async function fetchBlog(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const blogs = await fetchAllBlogs()
+  try {
+    const blogs = await fetchAllBlogs()
 
-  if (!blogs) {
-    return null
-  }
-
-  return blogs.map((blog) => {
-    return {
-      params: {
-        slug: blog.slug,
-      },
+    if (!blogs || blogs.length === 0) {
+      return []
     }
-  })
+
+    return blogs.map((blog) => ({
+      params: { slug: blog.slug },
+    }))
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default async function Blog(params: { params: { slug: string } }) {
