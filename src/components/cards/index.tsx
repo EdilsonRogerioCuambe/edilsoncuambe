@@ -28,16 +28,7 @@ interface Blog {
   }
 }
 
-export default function Cards({
-  blogs,
-  loading,
-}: {
-  blogs: Blog[]
-  loading: boolean
-}) {
-  if (!blogs) {
-    return null
-  }
+export default function Cards({ blogs }: { blogs: Blog[] }) {
   const loadingCards = Array.from({ length: 12 }).map((_, index) => (
     <div
       key={index}
@@ -55,9 +46,9 @@ export default function Cards({
     </div>
   ))
 
-  if (loading) {
+  if (!blogs) {
     return (
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+      <div className="grid md:grid-cols-3 mb-5 sm:grid-cols-2 grid-cols-1 gap-8">
         {loadingCards}
       </div>
     )

@@ -27,14 +27,8 @@ interface Blog {
   }
 }
 
-export default function SideBar({
-  blogs,
-  loading,
-}: {
-  blogs: Blog[]
-  loading: boolean
-}) {
-  if (loading) {
+export default function SideBar({ blogs }: { blogs: Blog[] }) {
+  if (!blogs) {
     return (
       <div className="flex justify-center items-center">
         <div className="animate-pulse h-64 bg-[#121214] rounded-lg" />
