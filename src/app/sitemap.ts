@@ -81,19 +81,6 @@ async function fetchAllBlogs() {
   return blogs.blogs
 }
 
-export async function generateSitemaps() {
-  const blogs = await fetchAllBlogs()
-
-  if (!blogs) {
-    return []
-  }
-
-  const total = Math.ceil(blogs.length / 50000)
-  const sitemaps = [...Array(total)].map((_, i) => i)
-
-  return sitemaps
-}
-
 export default async function sitemap({
   id,
 }: {
@@ -109,5 +96,6 @@ export default async function sitemap({
 
   return blogs.slice(start, end).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
+    lastModified: new Date(blog.updatedAt),
   }))
 }
