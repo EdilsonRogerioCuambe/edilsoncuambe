@@ -81,20 +81,14 @@ async function fetchAllBlogs() {
   return blogs.blogs
 }
 
-export default async function sitemap({
-  id,
-}: {
-  id: number
-}): Promise<MetadataRoute.Sitemap> {
-  const start = id * 50000
-  const end = start + 50000
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogs = await fetchAllBlogs()
 
   if (!blogs) {
     return []
   }
 
-  return blogs.slice(start, end).map((blog) => ({
+  return blogs.slice(0, 50000).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
     lastModified: new Date(blog.updatedAt),
   }))
