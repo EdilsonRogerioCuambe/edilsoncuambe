@@ -83,10 +83,15 @@ async function fetchAllBlogs() {
 
 export async function generateSitemaps() {
   const blogs = await fetchAllBlogs()
+
   if (!blogs) {
     return []
   }
-  return blogs.map((blog) => ({ slug: blog.slug }))
+
+  const total = Math.ceil(blogs.length / 50000)
+  const sitemaps = [...Array(total)].map((_, i) => i)
+
+  return sitemaps
 }
 
 export default async function sitemap({
