@@ -92,12 +92,9 @@ export default async function sitemap({
 }: {
   slug: string
 }): Promise<MetadataRoute.Sitemap> {
-  const start = Number(slug) * 50000
-  const end = start + 50000
-
   const blogs = await fetchAllBlogs()
 
-  return blogs.map((blog) => ({
+  return blogs.slice(0, 50000).map((blog) => ({
     url: `https://edilsoncuambe.tech/blog/${blog.slug}`,
     lastmod: new Date(blog.updatedAt).toISOString(),
   }))
