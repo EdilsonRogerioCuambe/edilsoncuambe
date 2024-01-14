@@ -86,6 +86,7 @@ export async function generateSitemaps() {
   return blogs.map((blog) => ({ alug: blog.slug }))
 }
 
+// comment
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogs = await fetchAllBlogs()
 
