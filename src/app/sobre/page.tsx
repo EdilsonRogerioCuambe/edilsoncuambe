@@ -1,8 +1,6 @@
-'use client'
 import Banner from '@/components/banner'
 import ReactMarkdown from 'react-markdown'
 import SideBar from '@/components/sidebar'
-import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import github from '../../../public/github.png'
 import linkedin from '../../../public/linkedin.png'
@@ -59,64 +57,7 @@ interface BlogsResponse {
   blogs: Blog[]
 }
 
-const queryAllBlogs = gql`
-    query Blogs {
-      blogs() {
-        createdAt
-        description
-        id
-        publishedAt
-        shortDescription
-        slug
-        title
-        updatedAt
-        tags
-        image {
-          url
-        }
-        author {
-          ... on Author {
-            id
-            email
-            name
-            avatar {
-              url
-            }
-          }
-        }
-        category {
-          id
-          name
-        }
-      }
-    }
-  `
-
-const queryAuthorByEmail = gql`
-  query Author {
-    author(where: { email: "edilson@aluno.unilab.edu.br" }) {
-      avatar {
-        url
-      }
-      email
-      github
-      id
-      linkedIn
-      name
-      phone
-      publishedAt
-      updatedAt
-      createdAt
-      description
-    }
-  }
-`
-
-export default function Sobre() {
-  const [author, setAuthor] = useState<Author>()
-  const [blogs, setBlogs] = useState<Blog[]>()
-  const [loading, setLoading] = useState(true)
-
+async function fetchAllBlogs() {
   const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
   if (!DATABASE_URL) {
@@ -125,27 +66,85 @@ export default function Sobre() {
     )
   }
 
-  const fetchBlogs = useCallback(async () => {
-    setLoading(true)
-    const blogs = (await request(DATABASE_URL, queryAllBlogs)) as BlogsResponse
-    setBlogs(blogs.blogs)
-    setLoading(false)
-  }, [DATABASE_URL])
+  const query = gql`
+    query AllBlogs {
+      blogs(orderBy: createdAt_DESC) {
+        author {
+          ... on Author {
+            id
+            email
+            name
+            publishedAt
+            phone
+            updatedAt
+            github
+            createdAt
+            avatar {
+              url
+            }
+          }
+        }
+        category {
+          name
+          id
+        }
+        description
+        id
+        publishedAt
+        image {
+          url
+        }
+        title
+        updatedAt
+        tags
+        slug
+        shortDescription
+      }
+    }
+  `
+  const blogs = (await request(DATABASE_URL, query)) as BlogsResponse
+  return blogs.blogs
+}
 
-  const fetchAuthor = useCallback(async () => {
-    setLoading(true)
-    const author = (await request(
-      DATABASE_URL,
-      queryAuthorByEmail,
-    )) as AuthorResponse
-    setAuthor(author.author)
-    setLoading(false)
-  }, [DATABASE_URL])
+async function fetchAuthor() {
+  const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
-  useEffect(() => {
-    fetchBlogs()
-    fetchAuthor()
-  }, [fetchBlogs, fetchAuthor])
+  if (!DATABASE_URL) {
+    throw new Error(
+      'Please define the DATABASE_URL environment variable inside .env.local',
+    )
+  }
+  const queryAuthorByEmail = gql`
+    query Author {
+      author(where: { email: "edilson@aluno.unilab.edu.br" }) {
+        avatar {
+          url
+        }
+        email
+        github
+        id
+        linkedIn
+        name
+        phone
+        publishedAt
+        updatedAt
+        createdAt
+        description
+      }
+    }
+  `
+
+  const author = (await request(
+    DATABASE_URL,
+    queryAuthorByEmail,
+  )) as AuthorResponse
+
+  return author.author
+}
+
+export default async function Sobre() {
+  const author = await fetchAuthor()
+  const blogs = await fetchAllBlogs()
 
   if (!author) {
     return (
@@ -218,7 +217,7 @@ export default function Sobre() {
           </div>
         </div>
         <div className="lg:w-1/4">
-          <SideBar blogs={blogs} loading={loading} />
+          <SideBar blogs={blogs} />
         </div>
       </div>
     </main>

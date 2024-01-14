@@ -1,5 +1,3 @@
-'use client'
-import { useEffect, useCallback, useState } from 'react'
 import Link from 'next/link'
 import { FaGithub, FaBlog } from 'react-icons/fa'
 import { BsLinkedin } from 'react-icons/bs'
@@ -19,21 +17,7 @@ interface CategoriesResponse {
   categories: Category[]
 }
 
-const queryAllCategories = gql`
-  query Categories {
-    categories {
-      id
-      name
-      publishedAt
-      slug
-      updatedAt
-    }
-  }
-`
-
-export default function Footer() {
-  const [categories, setCategories] = useState<Category[]>()
-
+async function fetchAllCategories() {
   const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
   if (!DATABASE_URL) {
@@ -42,17 +26,22 @@ export default function Footer() {
     )
   }
 
-  const fetchCategories = useCallback(async () => {
-    const categories = (await request(
-      DATABASE_URL,
-      queryAllCategories,
-    )) as CategoriesResponse
-    setCategories(categories.categories)
-  }, [DATABASE_URL])
+  const query = gql`
+    query AllCategories {
+      categories {
+        id
+        name
+        slug
+      }
+    }
+  `
 
-  useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
+  const categories = (await request(DATABASE_URL, query)) as CategoriesResponse
+  return categories.categories
+}
+
+export default async function Footer() {
+  const categories = await fetchAllCategories()
 
   if (!categories) {
     return (

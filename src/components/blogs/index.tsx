@@ -45,6 +45,8 @@ interface CategoriesResponse {
   categories: Category[]
 }
 
+export const dynamicParams = true
+
 async function fetchAllBlogs() {
   const DATABASE_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
@@ -122,9 +124,5 @@ export default async function BlogsList() {
   const blogs = await fetchAllBlogs()
   const categories = await fetchAllCategories()
 
-  return (
-    <div>
-      <Categories categories={categories} blogs={blogs} />
-    </div>
-  )
+  return <Categories categories={categories} blogs={blogs} />
 }
