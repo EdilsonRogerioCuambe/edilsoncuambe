@@ -150,7 +150,8 @@ export async function generateStaticParams() {
       params: { slug: blog.slug },
     }))
   } catch (error) {
-    console.log(error)
+    console.error('Erro ao gerar parâmetros estáticos:', error)
+    return []
   }
 }
 
