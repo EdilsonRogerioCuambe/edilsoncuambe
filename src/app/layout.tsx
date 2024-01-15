@@ -5,7 +5,8 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import GoogleAnalytics from './GoogleAnalytics'
+import GoogleAnalytics from '../components/google-analytics/GoogleAnalytics'
+import CookieBanner from '@/components/cookie-banner'
 
 const mono = Mono({ subsets: ['latin'] })
 
@@ -61,20 +62,21 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const GOOGLE_ANALYTICS = process.env.GA_TRACKING_ID
+  const GOOGLE_ANALYTICS = process.env.GOOGLE_MEASERUMENT_ID
 
   if (!GOOGLE_ANALYTICS) {
-    throw new Error('Missing env.GA_TRACKING_ID')
+    throw new Error('Missing GOOGLE_MEASERUMENT_ID')
   }
 
   return (
     <html lang="pt">
+      <GoogleAnalytics GOOGLE_MEASUREMENT_ID={GOOGLE_ANALYTICS} />
       <body className={`${mono.className} bg-[#202024] text-[#c4c4cc]`}>
         <Navbar />
         {children}
         <Footer />
         <ToastContainer />
-        <GoogleAnalytics />
+        <CookieBanner />
       </body>
     </html>
   )
