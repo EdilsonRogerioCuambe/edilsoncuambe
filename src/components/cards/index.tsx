@@ -55,37 +55,41 @@ export default function Cards({ blogs }: { blogs: Blog[] }) {
   }
 
   return (
-    <div className="grid md:grid-cols-3 mb-5 sm:grid-cols-2 grid-cols-1 gap-8">
+    <div className="grid md:grid-cols-3 my-5 sm:grid-cols-2 grid-cols-1 gap-8">
       {blogs?.map((blog) => (
-        <Link
-          key={blog?.id}
-          href={`/blog/${blog?.slug}`}
-          passHref
-          className="p-5 shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300 ease-in-out h-[550px]"
-        >
-          <Image
-            src={blog?.image?.url}
-            alt={blog?.author?.name}
-            className="rounded-lg w-full h-64 object-cover"
-            width={500}
-            height={500}
-          />
-          <h3 className="mt-4 mb-2 font-bold text-xl hover:text-purple-400 transition-all duration-300 ease-in-out">
-            {blog.title}
-          </h3>
-          <p className="mb-2 text-gray-400">
+        <Link key={blog?.id} href={`/blog/${blog?.slug}`} passHref>
+          <div className="flex flex-col h-full md:px-0 px-4">
             <Image
-              src={blog?.author?.avatar?.url}
-              alt={blog?.author?.name}
-              className="rounded-full w-10 h-10 object-cover inline-flex mr-2 border-2 border-purple-400"
-              width={24}
-              height={24}
+              src={blog?.image?.url}
+              alt={blog?.title}
+              className="rounded-lg w-full object-cover"
+              width={500}
+              height={300}
+              layout="responsive"
             />
-            {blog?.author?.name}
-          </p>
-          <p className="text-sm text-gray-400">
-            Publicado em: {new Date(blog?.publishedAt).toLocaleDateString()}
-          </p>
+            <div className="p-5 shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300 ease-in-out flex-grow cursor-pointer">
+              <h3 className="mt-4 mb-2 font-bold text-xl hover:text-purple-400 transition-all duration-300 ease-in-out">
+                {blog.title}
+              </h3>
+              <p className="text-gray-400 mb-4">
+                {blog.shortDescription.slice(0, 75)}...
+              </p>
+              <div className="flex items-center mb-2">
+                <Image
+                  src={blog?.author?.avatar?.url}
+                  alt={blog?.author?.name}
+                  className="rounded-full object-cover inline-flex mr-2 border-2 border-purple-400"
+                  width={40}
+                  height={40}
+                  layout="fixed"
+                />
+                <span className="text-gray-400">{blog?.author?.name}</span>
+              </div>
+              <p className="text-sm text-gray-400">
+                Publicado em: {new Date(blog?.publishedAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
         </Link>
       ))}
     </div>
