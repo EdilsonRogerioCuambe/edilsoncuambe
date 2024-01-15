@@ -149,35 +149,17 @@ export default async function Footer() {
               <span className="text-xl font-bold tracking-wide uppercase">
                 Edilson <span className="uppercase text-green-400">Cuambe</span>
               </span>
-              <p className="mt-2 text-gray-400">
+              <p className="mt-2 text-md text-gray-400">
                 Desenvolvedor FullStack Web e Mobile
               </p>
-              <p className="mt-2 text-gray-400">
-                © {new Date().getFullYear()} Edilson Cuambe. Todos os direitos
-                reservados.
-              </p>
-              {/** News Letter */}
-              <div className="mt-4">
-                <form action="#" className="flex sm:max-w-sm sm:w-full">
-                  <label htmlFor="email" className="sr-only">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="text"
-                    placeholder="Seu email"
-                    className="flex-grow w-full h-10 px-4 transition duration-200 bg-[#121214] border border-gray-700 rounded focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 text-[#c4c4cc] py-2 ml-2 text-sm font-medium tracking-wider uppercase transition-colors duration-200 transform bg-purple-600 rounded-md hover:bg-purple-500 focus:outline-none focus:bg-purple-500"
-                  >
-                    Assinar
-                  </button>
-                </form>
-              </div>
             </div>
           </div>
+        </div>
+        <div className="flex flex-col justify-between pt-5 mt-10 border-t border-gray-700 sm:flex-row">
+          <p className="text-sm text-gray-400">
+            &copy; {new Date().getFullYear()} Edilson Cuambe. Todos os direitos
+            reservados.
+          </p>
         </div>
       </div>
     </footer>
