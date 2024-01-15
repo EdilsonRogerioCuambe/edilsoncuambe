@@ -53,7 +53,7 @@ export default function Categories({
 }) {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 12
+  const itemsPerPage = 9
 
   const filteredBlogs = blogs.filter(
     (blog) => !selectedCategory || blog.category.name === selectedCategory,
