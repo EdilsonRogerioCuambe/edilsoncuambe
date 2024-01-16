@@ -31,7 +31,7 @@ export default function CookieBanner() {
       } flex px-3 md:px-4 justify-between items-center flex-col sm:flex-row gap-4 bg-[#323238] rounded-lg shadow text-[#c4c4cc]`}
     >
       <div className="text-center">
-        <Link href="/privacy-policy">
+        <Link href="/politica-de-privacidade">
           <p>
             Nos usamos <span className="font-bold text-green-400">cookies</span>{' '}
             em nosso site para melhorar a sua experiência.
