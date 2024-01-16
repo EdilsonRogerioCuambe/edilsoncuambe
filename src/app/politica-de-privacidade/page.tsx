@@ -1,7 +1,7 @@
 export default function PoliticaDePrivacidade() {
   return (
-    <div className="max-w-4xl mx-auto p-5">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+    <div className="max-w-4xl mx-auto py-24">
+      <h1 className="text-2xl font-bold text-[#c4c4cc] mb-4">
         Política de Privacidade
       </h1>
       <p className="mb-2">
@@ -16,7 +16,7 @@ export default function PoliticaDePrivacidade() {
         operamos.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">
         Informações Pessoais
       </h2>
       <p className="mb-4">
@@ -26,7 +26,7 @@ export default function PoliticaDePrivacidade() {
         estamos coletando e como será usado.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">
         Retenção de Dados
       </h2>
       <p className="mb-4">
@@ -36,7 +36,7 @@ export default function PoliticaDePrivacidade() {
         divulgação, cópia, uso ou modificação não autorizados.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">
         Compartilhamento de Dados
       </h2>
       <p className="mb-4">
@@ -44,7 +44,7 @@ export default function PoliticaDePrivacidade() {
         com terceiros, exceto quando exigido por lei.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">
         Seu Consentimento
       </h2>
       <p className="mb-4">
@@ -52,7 +52,7 @@ export default function PoliticaDePrivacidade() {
         de acordo com esta política.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">
         Alterações na Política
       </h2>
       <p className="mb-4">
@@ -65,7 +65,7 @@ export default function PoliticaDePrivacidade() {
         se alguma, usamos e/ou div ulgamos.
       </p>
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-3">Contato</h2>
+      <h2 className="text-xl font-semibold text-[#c4c4cc] mb-3">Contato</h2>
       <p>
         Para qualquer dúvida ou esclarecimento sobre nossa política de
         privacidade, entre em contato conosco através do
