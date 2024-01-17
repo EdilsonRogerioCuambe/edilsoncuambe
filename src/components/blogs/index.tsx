@@ -124,5 +124,13 @@ export default async function BlogsList() {
   const blogs = await fetchAllBlogs()
   const categories = await fetchAllCategories()
 
+  if (!blogs) {
+    return <div>loading...</div>
+  }
+
+  if (!categories) {
+    return <div>loading...</div>
+  }
+
   return <Categories categories={categories} blogs={blogs} />
 }
