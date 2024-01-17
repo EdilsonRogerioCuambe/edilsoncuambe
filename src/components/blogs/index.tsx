@@ -58,7 +58,7 @@ async function fetchAllBlogs() {
 
   const query = gql`
     query AllBlogs {
-      blogs(orderBy: createdAt_DESC) {
+      blogs(orderBy: createdAt_DESC, first: 1000) {
         author {
           ... on Author {
             id
