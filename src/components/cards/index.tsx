@@ -83,10 +83,12 @@ export default function Cards({ blogs }: { blogs: Blog[] }) {
                   height={40}
                   layout="fixed"
                 />
-                <span className="text-gray-400">{blog?.author?.name}</span>
-                <span className="text-gray-400 ml-2">
-                  {new Date(blog?.publishedAt).toLocaleDateString()}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-gray-400">{blog?.author?.name}</span>
+                  <span className="text-gray-400 ml-2">
+                    {new Date(blog?.publishedAt).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {blog?.tags.map((tag) => (
