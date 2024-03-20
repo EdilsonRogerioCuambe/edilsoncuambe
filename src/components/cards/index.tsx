@@ -84,10 +84,20 @@ export default function Cards({ blogs }: { blogs: Blog[] }) {
                   layout="fixed"
                 />
                 <span className="text-gray-400">{blog?.author?.name}</span>
+                <span className="text-gray-400 ml-2">
+                  {new Date(blog?.publishedAt).toLocaleDateString()}
+                </span>
               </div>
-              <p className="text-sm text-gray-400">
-                Publicado em: {new Date(blog?.publishedAt).toLocaleDateString()}
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {blog?.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-purple-400 text-white px-2 py-1 rounded-md"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </Link>
