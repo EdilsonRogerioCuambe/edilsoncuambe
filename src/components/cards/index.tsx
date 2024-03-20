@@ -67,8 +67,8 @@ export default function Cards({ blogs }: { blogs: Blog[] }) {
               height={300}
               layout="responsive"
             />
-            <div className="rounded-lg hover:shadow-2xl transition-all duration-300 ease-in-out flex-grow cursor-pointer">
-              <h3 className="mt-4 mb-2 font-bold text-xl hover:text-purple-400 transition-all duration-300 ease-in-out truncate">
+            <div className="rounded-lg flex-grow group-hover:text-pink-400 cursor-pointer">
+              <h3 className="mt-4 mb-2 font-bold text-xl transition-all duration-300 ease-in-out truncate">
                 {blog.title}
               </h3>
               <p className="text-gray-400 mb-4">
