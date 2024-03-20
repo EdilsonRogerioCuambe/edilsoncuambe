@@ -85,7 +85,7 @@ export default function Cards({ blogs }: { blogs: Blog[] }) {
                 />
                 <div className="flex flex-col">
                   <span className="text-gray-400">{blog?.author?.name}</span>
-                  <span className="text-gray-400 ml-2">
+                  <span className="text-gray-400">
                     {new Date(blog?.publishedAt).toLocaleDateString()}
                   </span>
                 </div>
